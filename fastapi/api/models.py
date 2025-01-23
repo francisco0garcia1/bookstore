@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Enum
+from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy.dialects.postgresql import ENUM
 from .database import Base
 
 
@@ -13,7 +14,7 @@ class Book(Base):
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String, nullable=False)
     year = Column(Integer, nullable=False)
-    status = Column(Enum("PUBLISHED", "DRAFT", name="book_status"))
+    status = Column(ENUM("PUBLISHED", "DRAFT", name="book_status"))
     author_id = Column(ForeignKey("authors.id"))
 
 
