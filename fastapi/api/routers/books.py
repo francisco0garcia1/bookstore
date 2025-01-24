@@ -35,14 +35,14 @@ def get_books(db: db_dependency):
     return db.query(Book).all()
 
 
-@router.post("/books", status_code=status.HTTP_201_CREATED)
+@router.post("/", status_code=status.HTTP_201_CREATED)
 def create_book(db: db_dependency, book: BookBase):
     book_author = Author(**book.author.model_dump())
 
     if book_author.id is None:
         # create author
         db.add(book_author)
-        # db.commit()
+        db.commit()
         db.refresh(book_author)
     else:
         # check that author exists
@@ -63,7 +63,7 @@ def create_book(db: db_dependency, book: BookBase):
     return db_book
 
 
-@router.put("/books/{book_id}", status_code=status.HTTP_200_OK)
+@router.put("/{book_id}", status_code=status.HTTP_200_OK)
 def modify_book(db: db_dependency, book_id, book_update: BookUpdateBase):
     # check that book exists
     book = db.query(Book).filter(Book.id == book_id).first()

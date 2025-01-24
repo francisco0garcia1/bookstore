@@ -1,8 +1,8 @@
-"""Added basic tables.
+"""Updated books' tables.
 
-Revision ID: b0d5ec53dc72
+Revision ID: 36d6fc8fcad4
 Revises: 
-Create Date: 2025-01-23 02:04:21.603287
+Create Date: 2025-01-24 02:26:56.692699
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision: str = 'b0d5ec53dc72'
+revision: str = '36d6fc8fcad4'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
