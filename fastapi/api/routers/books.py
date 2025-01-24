@@ -87,5 +87,3 @@ def modify_book(db: db_dependency, book_id, book_update: BookUpdateBase):
         return book
     else:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Could not find specified book")
-
-
