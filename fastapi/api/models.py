@@ -9,7 +9,7 @@ class Book(Base):
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String, nullable=False)
     year = Column(Integer, nullable=False)
-    status = Column(ENUM("PUBLISHED", "DRAFT", name="book_status"))
+    status = Column(ENUM("PUBLISHED", "DRAFT", "NA", name="book_status"))
     author_id = Column(Integer, ForeignKey("authors.id"))
     author: Mapped["Author"] = relationship(lazy='joined')
 

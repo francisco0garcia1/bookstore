@@ -20,6 +20,7 @@ class AuthorBase(BaseModel):
 class BookBase(BaseModel):
     title: str
     year: int
+    status: str | None = None
     author: AuthorBase
 
 
@@ -28,6 +29,7 @@ class BookUpdateBase(BaseModel):
     year: int | None = None
     author_id: int | None = None
     author_name: str | None = None
+    status: str | None = None
 
 
 @router.get('/', status_code=status.HTTP_200_OK)
@@ -51,11 +53,15 @@ def create_book(db: db_dependency, book: BookBase):
             book_author = author
         else:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Could not find specified author")
-
+    # check if valid status
+    if book.status not in ["DRAFT", "PUBLISHED", "NA"]:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Unsupported status")
+    # create book
     db_book = Book(
         title=book.title,
         year=book.year,
-        author=book_author
+        author=book_author,
+        status=book.status,
     )
     db.add(db_book)
     db.commit()
@@ -71,6 +77,7 @@ def modify_book(db: db_dependency, book_id, book_update: BookUpdateBase):
         # update accordingly
         book.title = book_update.title if book_update.title else book.title
         book.year = book_update.year if book_update.year else book.year
+        book.status = book_update.status if book_update.status else book.status
         # check if update author
         if book_update.author_id is not None:
             # check that author exists
