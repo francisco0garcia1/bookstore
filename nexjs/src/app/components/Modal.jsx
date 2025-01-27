@@ -9,14 +9,13 @@ export const Modal = ({ closeModal, onSubmit, defaultValue, authorsList}) => {
       "id": "-1",
       "year": "",
       "author_id": "-1",
-      "status": "NA",
+      "status": "",
       "author_name": ""
     }
   );
   const [errors, setErrors] = useState("");
 
   const validateForm = () => {
-    console.log(formState);
     const requiredKeys = ["title","year"];
 
     if (formState.title && formState.year && (formState.author_id !== "-1" || formState.author_name)) {
@@ -41,6 +40,16 @@ export const Modal = ({ closeModal, onSubmit, defaultValue, authorsList}) => {
   };
 
   const handleChange = (e) => {
+    if(e.target.name == 'author_id'){
+      if(e.target.value == "-1"){
+        formState.author_name = "";
+      }else{
+        // get author name
+        const authorName = (authorsList.filter(author => {return author.id == e.target.value}))[0].name
+        //set it in the edit author field
+        formState.author_name = authorName;
+      }
+    }
     setFormState({ ...formState, [e.target.name]: e.target.value });
   };
 
@@ -48,7 +57,6 @@ export const Modal = ({ closeModal, onSubmit, defaultValue, authorsList}) => {
     e.preventDefault();
 
     if (!validateForm()) return;
-
 
     onSubmit(formState);
 
@@ -77,6 +85,7 @@ export const Modal = ({ closeModal, onSubmit, defaultValue, authorsList}) => {
             <select
               name="author_id"
               onChange={handleChange}
+              defaultValue={formState.author_id}
             >
               <option value="-1">New Author...</option>
               {authorsList.map(author => (
@@ -96,7 +105,7 @@ export const Modal = ({ closeModal, onSubmit, defaultValue, authorsList}) => {
               onChange={handleChange}
               value={formState.status}
             >
-              <option value="NA">Select a Status</option>
+              <option value="">Select a Status</option>
               <option value="PUBLISHED">Published</option>
               <option value="DRAFT">Draft</option>
               <option value="NA">Not Available</option>

@@ -11,13 +11,9 @@ function Books() {
   const [rowToEdit, setRowToEdit] = useState(null);
   const [authorsList, setAuthorsList] = useState([])
 
-  const handleDeleteRow = (targetIndex) => {
-    setRows(rows.filter((_, idx) => idx !== targetIndex));
-  };
 
   const handleEditRow = (idx) => {
     setRowToEdit(idx);
-
     setModalOpen(true);
   };
 
@@ -29,39 +25,56 @@ function Books() {
           const response = await axios.post("http://localhost:8000/books", {
             "title": newRow.title,
             "year": parseInt(newRow.year),
-            "status": newRow.status,
+            "status": newRow.status === "" ? "NA" : newRow.status,
             "author": {
               "id": newRow.author_id === "-1" ? null : parseInt(newRow.author_id),
               "name": newRow.author_name,
             }
           });
-          console.log(response.data);
+          setRows([...rows, response.data])
         }catch(error){
           console.error('Failed to post new book:', error);
         }
       }
-
       postBook();
     }else{
       // edit book
+      const book_id = rows[rowToEdit].id
       const putBook = async () => {
         try{
-
+          const response = await axios.put(`http://localhost:8000/books/${book_id}`, {
+            "title": newRow.title,
+            "year": parseInt(newRow.year),
+            "status": newRow.status === "" ? "NA" : newRow.status,
+            "author_id": newRow.author_id === "-1" ? null : parseInt(newRow.author_id),
+            "author_name": newRow.author_name,
+            }
+          );
+          setRows(
+            rows.map((currRow, idx) => {
+              if (idx !== rowToEdit) return currRow;
+              return response.data;
+            })
+          );
         }catch(error){
           console.error('Failed to update book:', error);
         }
       }
-    }
-    // rowToEdit === null
-    //   ? setRows([...rows, newRow])
-    //   : setRows(
-    //       rows.map((currRow, idx) => {
-    //         if (idx !== rowToEdit) return currRow;
 
-    //         return newRow;
-    //       })
-    //     );
+      putBook();
+    }
   };
+
+  const extractBookData = (row) => {
+    return {
+      "title": row.title,
+      "id": row.id,
+      "year": row.year,
+      "author_id": row.author.id,
+      "status": row.status,
+      "author_name": row.author.name,
+    };
+  }
 
   useEffect(() => {
     const fetchBooks = async () => {
@@ -82,7 +95,7 @@ function Books() {
 
   return (
     <div className="Books">
-      <Table rows={rows} deleteRow={handleDeleteRow} editRow={handleEditRow} />
+      <Table rows={rows} editRow={handleEditRow} />
       <button onClick={() => setModalOpen(true)} className="btn">
         Add
       </button>
@@ -93,7 +106,7 @@ function Books() {
             setRowToEdit(null);
           }}
           onSubmit={handleSubmit}
-          defaultValue={rowToEdit !== null && rows[rowToEdit]}
+          defaultValue={rowToEdit !== null && extractBookData(rows[rowToEdit])}
           authorsList={authorsList}
         />
       )}
