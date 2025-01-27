@@ -31,7 +31,6 @@ function Books() {
               "name": newRow.author_name,
             }
           });
-          setRows([...rows, response.data])
         }catch(error){
           console.error('Failed to post new book:', error);
         }
@@ -49,12 +48,6 @@ function Books() {
             "author_id": newRow.author_id === "-1" ? null : parseInt(newRow.author_id),
             "author_name": newRow.author_name,
             }
-          );
-          setRows(
-            rows.map((currRow, idx) => {
-              if (idx !== rowToEdit) return currRow;
-              return response.data;
-            })
           );
         }catch(error){
           console.error('Failed to update book:', error);
@@ -91,7 +84,7 @@ function Books() {
     };
 
     fetchBooks();
-  }, []);
+  });
 
   return (
     <div className="Books">
