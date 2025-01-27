@@ -1,9 +1,7 @@
 import sys
 import os
-import alembic_postgresql_enum
 
 from api.models import Base as DataBase
-from api.config import DATABASE_URI
 
 from logging.config import fileConfig
 
@@ -19,7 +17,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 # access to the values within the .ini file in use.
 config = context.config
 # set the database url
-config.set_main_option('sqlalchemy.url', DATABASE_URI)
+config.set_main_option('sqlalchemy.url', os.environ.get("DATABASE_URI"))
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
@@ -39,7 +37,7 @@ target_metadata = DataBase.metadata
 
 
 def run_migrations_offline() -> None:
-    """Run migrations in 'offline' mode.
+    """Run migrations in 'offline' mode.    
 
     This configures the context with just a URL
     and not an Engine, though an Engine is acceptable

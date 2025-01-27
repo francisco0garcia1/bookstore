@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from 'axios';
-
-import "./Books.css";
+import "./books.css";
 import { Table } from "../components/Table";
 import { Modal } from "../components/Modal";
 
@@ -84,7 +83,7 @@ function Books() {
     };
 
     fetchBooks();
-  });
+  }, [modalOpen]);
 
   return (
     <div className="Books">

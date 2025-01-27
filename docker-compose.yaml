@@ -1,0 +1,30 @@
+services:
+  database:
+    image: 'postgres'
+    restart: always
+    ports:
+      - 5433:5433
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - PGPORT=5433
+
+  fastapi:
+    depends_on:
+      - database
+    build: ./fastapi
+    env_file: .env
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_SERVER: ${POSTGRES_SERVER}
+      DATABASE_URI: ${DATABASE_URI}
+    ports:
+      - 8000:8000
+
+  nextjs:
+    build: ./nextjs
+    ports:
+      - 3000:3000

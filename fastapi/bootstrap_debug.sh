@@ -18,9 +18,7 @@ fi
 
 export DATABASE_URI="postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_SERVER}/${POSTGRES_DB}"
 
-# python3 -m pipenv run alembic upgrade head
-
-#python3 -m pipenv run flask --debug run -h 0.0.0.0
+alembic upgrade head
 
 cd ./api
 fastapi run main.py
