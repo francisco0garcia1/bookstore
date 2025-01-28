@@ -9,6 +9,7 @@ function Books() {
   const [rows, setRows] = useState([]);
   const [rowToEdit, setRowToEdit] = useState(null);
   const [authorsList, setAuthorsList] = useState([])
+  const [dataReload, setDataReload] = useState(false)
 
 
   const handleEditRow = (idx) => {
@@ -33,6 +34,7 @@ function Books() {
         }catch(error){
           console.error('Failed to post new book:', error);
         }
+        setDataReload(!dataReload);
       }
       postBook();
     }else{
@@ -51,8 +53,8 @@ function Books() {
         }catch(error){
           console.error('Failed to update book:', error);
         }
+        setDataReload(!dataReload);
       }
-
       putBook();
     }
   };
@@ -83,7 +85,7 @@ function Books() {
     };
 
     fetchBooks();
-  }, [modalOpen]);
+  }, [dataReload]);
 
   return (
     <div className="Books">
