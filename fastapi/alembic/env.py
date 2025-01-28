@@ -2,6 +2,7 @@ import sys
 import os
 
 from api.models import Base as DataBase
+from api.config import DATABASE_URI
 
 from logging.config import fileConfig
 
@@ -17,7 +18,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 # access to the values within the .ini file in use.
 config = context.config
 # set the database url
-config.set_main_option('sqlalchemy.url', os.environ.get("DATABASE_URI"))
+config.set_main_option('sqlalchemy.url', DATABASE_URI)
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.

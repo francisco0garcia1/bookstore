@@ -1,7 +1,7 @@
 services:
   database:
     image: 'postgres'
-    restart: always
+    container_name: bookstore_db
     ports:
       - 5433:5433
     environment:
@@ -13,18 +13,22 @@ services:
   fastapi:
     depends_on:
       - database
-    build: ./fastapi
+    image: bookstore_backend_image
+    pull_policy: never
+    container_name: bookstore_backend
+    build: 
+      context: ./fastapi
+      dockerfile: Dockerfile
     env_file: .env
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_SERVER: ${POSTGRES_SERVER}
-      DATABASE_URI: ${DATABASE_URI}
     ports:
       - 8000:8000
 
   nextjs:
-    build: ./nextjs
+    image: bookstore_frontend_image
+    pull_policy: never
+    container_name: bookstore_frontend
+    build: 
+      context: ./nextjs
+      dockerfile: Dockerfile
     ports:
       - 3000:3000
