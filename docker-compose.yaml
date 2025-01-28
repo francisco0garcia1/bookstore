@@ -4,6 +4,8 @@ services:
     container_name: bookstore_db
     ports:
       - 5433:5433
+    volumes:
+      - bookstore-data:/data/db
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
@@ -32,3 +34,6 @@ services:
       dockerfile: Dockerfile
     ports:
       - 3000:3000
+  
+volumes:
+  bookstore-data:

@@ -54,7 +54,7 @@ def create_book(db: db_dependency, book: BookBase):
         else:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Could not find specified author")
     # check if valid status
-    if book.status not in ["DRAFT", "PUBLISHED", "NA"]:
+    if book.status not in ["DRAFT", "PUBLISHED", "NA", None]:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Unsupported status")
     # create book
     db_book = Book(
@@ -79,7 +79,7 @@ def modify_book(db: db_dependency, book_id, book_update: BookUpdateBase):
         book.year = book_update.year if book_update.year else book.year
         book.status = book_update.status if book_update.status else book.status
         # check if valid status
-        if book.status not in ["DRAFT", "PUBLISHED", "NA"]:
+        if book.status not in ["DRAFT", "PUBLISHED", "NA", None]:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Unsupported status")
         # check if update author
         if book_update.author_id is not None:
@@ -87,7 +87,7 @@ def modify_book(db: db_dependency, book_id, book_update: BookUpdateBase):
             author = db.query(Author).filter(Author.id == book_update.author_id).first()
             if author:
                 # update author's name if necessary
-                if book_update.author_name != author.name:
+                if book_update.author_name is not None:
                     author.name = book_update.author_name
                 book.author = author
             else:
